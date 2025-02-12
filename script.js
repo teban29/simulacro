@@ -22,27 +22,31 @@ fetch("https://ipapi.co/json/")
     document.getElementById("ip-address").textContent = "No se pudo obtener la dirección IP y ubicación.";
   });
 
-// Obtener información básica del navegador y zona horaria
+// Obtener información básica del navegador y sistema operativo
 const userAgent = navigator.userAgent;
 let browserName = "Desconocido";
+let operatingSystem = "Desconocido";
+
+// Detectar navegador
 if (userAgent.includes("Chrome")) browserName = "Google Chrome";
 else if (userAgent.includes("Firefox")) browserName = "Mozilla Firefox";
 else if (userAgent.includes("Safari")) browserName = "Safari";
 else if (userAgent.includes("Edge")) browserName = "Microsoft Edge";
 else if (userAgent.includes("Opera")) browserName = "Opera";
 
+// Detectar sistema operativo
+if (userAgent.includes("Windows")) operatingSystem = "Windows";
+else if (userAgent.includes("Mac OS")) operatingSystem = "MacOS";
+else if (userAgent.includes("Linux")) operatingSystem = "Linux";
+else if (userAgent.includes("Android")) operatingSystem = "Android";
+else if (userAgent.includes("like Mac")) operatingSystem = "iOS";
+
+// Mostrar información del navegador y sistema operativo
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 document.getElementById("device-info").textContent = `
   Navegador: ${browserName}
+  Sistema Operativo: ${operatingSystem}
   Zona horaria: ${timeZone}`;
 
-// Mostrar nombre del equipo (hostname)
-fetch("https://api.ipify.org?format=json") // Este punto se debe ajustar si se desea un hostname más específico
-  .then(() => {
-    const hostname = window.location.hostname || "Equipo Desconocido";
-    document.getElementById("hostname").textContent = `Nombre del equipo: ${hostname}`;
-  })
-  .catch(error => {
-    console.error("Error obteniendo el hostname:", error);
-    document.getElementById("hostname").textContent = "No se pudo obtener el nombre del equipo.";
-  });
+// Mostrar información del dispositivo como identificador aproximado
+document.getElementById("hostname").textContent = `Software del equipo: ${operatingSystem}`;
