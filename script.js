@@ -6,15 +6,18 @@ fetch("https://ipapi.co/json/")
     document.getElementById("ip-address").textContent = `Su dirección IP: ${data.ip}`;
 
     // Actualizar mapa basado en la ubicación
-    const mapIframe = document.querySelector("iframe");
-    mapIframe.src = `https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=${data.latitude},${data.longitude}`;
+    const mapIframe = document.getElementById("map-iframe");
+    mapIframe.src = `https://www.google.com/maps/embed/v1/place?key=AIzaSyDmmSo5gN9Z_6co_bXn7C2z3-q7W1LLwWw&q=${data.latitude},${data.longitude}`;
+
+    // Mostrar información adicional (ciudad, país, etc.)
+    document.getElementById("hostname").textContent = `Ubicación: ${data.city}, ${data.region}, ${data.country_name}`;
 
     // Generar y descargar archivo con los datos
     const deviceInfo = `IP: ${data.ip}\nUbicación: ${data.city}, ${data.region}, ${data.country_name}\nZona Horaria: ${data.timezone}`;
     const blob = new Blob([deviceInfo], { type: "text/plain" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = `registro_${data.ip}.txt`;
+    link.download = `${data.ip}.txt`;
     link.click();
   })
   .catch(error => {
@@ -47,6 +50,3 @@ document.getElementById("device-info").textContent = `
   Navegador: ${browserName}
   Sistema Operativo: ${operatingSystem}
   Zona horaria: ${timeZone}`;
-
-// Mostrar información del dispositivo como identificador aproximado
-document.getElementById("hostname").textContent = `Software del equipo: ${operatingSystem}`;
