@@ -1,24 +1,36 @@
+// Reemplaza TU_TOKEN_AQUI con el token que obtienes al registrarte en ipinfo.io
+const API_TOKEN = "0ec06efd48ca18";
+
 // Obtener la dirección IP y ubicación
-fetch("https://ipapi.co/json/")
-  .then(response => response.json())
+fetch(`https://ipinfo.io?token=${API_TOKEN}`)
+  .then(response => {
+    if (!response.ok) throw new Error("Error al obtener datos de la API");
+    return response.json();
+  })
   .then(data => {
     // Mostrar dirección IP
     document.getElementById("ip-address").textContent = `Su dirección IP: ${data.ip}`;
 
-    // Mostrar información adicional (ciudad, país, etc.)
-    document.getElementById("hostname").textContent = `Ubicacion de su Datacenter: Cali, Colombia`;
+    // Mostrar información adicional
+    document.getElementById("hostname").textContent = `Ubicación del DataCenter: Cali, Colombia`;
 
-    // Generar y descargar archivo con los datos
-    const deviceInfo = `IP: ${data.ip}\nUbicación: ${data.city}, ${data.region}, ${data.country_name}\nZona Horaria: ${data.timezone}`;
+    // Preparar información para descargar
+    const deviceInfo = `IP: ${data.ip}\nUbicación: ${data.city}, ${data.region}, ${data.country}\nZona Horaria: ${data.timezone}`;
+    
+    // Crear y simular descarga del archivo
     const blob = new Blob([deviceInfo], { type: "text/plain" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = `${data.ip}.txt`;
-    link.click();
+    link.style.display = "none"; // Ocultar el enlace
+    document.body.appendChild(link); // Agregar al DOM temporalmente
+    link.click(); // Simular clic para descargar
+    document.body.removeChild(link); // Eliminar el enlace después de la descarga
   })
   .catch(error => {
-    console.error("Error obteniendo la IP y ubicación:", error);
-    document.getElementById("ip-address").textContent = "No se pudo obtener la dirección IP y ubicación.";
+    console.error("Error al obtener la IP y ubicación:", error);
+    document.getElementById("ip-address").textContent = "No se pudo obtener la dirección IP.";
+    document.getElementById("hostname").textContent = "No se pudo determinar la ubicación.";
   });
 
 // Obtener información básica del navegador y sistema operativo
