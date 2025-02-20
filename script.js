@@ -5,12 +5,8 @@ fetch("https://ipapi.co/json/")
     // Mostrar dirección IP
     document.getElementById("ip-address").textContent = `Su dirección IP: ${data.ip}`;
 
-    // Actualizar mapa basado en la ubicación
-    const mapIframe = document.getElementById("map-iframe");
-    mapIframe.src = `https://www.google.com/maps/embed/v1/place?key=AIzaSyDmmSo5gN9Z_6co_bXn7C2z3-q7W1LLwWw&q=${data.latitude},${data.longitude}`;
-
     // Mostrar información adicional (ciudad, país, etc.)
-    document.getElementById("hostname").textContent = `Ubicación: ${data.city}, ${data.region}, ${data.country_name}`;
+    document.getElementById("hostname").textContent = `Ubicacion de su Datacenter: Cali, Colombia`;
 
     // Generar y descargar archivo con los datos
     const deviceInfo = `IP: ${data.ip}\nUbicación: ${data.city}, ${data.region}, ${data.country_name}\nZona Horaria: ${data.timezone}`;
@@ -30,12 +26,12 @@ const userAgent = navigator.userAgent;
 let browserName = "Desconocido";
 let operatingSystem = "Desconocido";
 
-// Detectar navegador
-if (userAgent.includes("Chrome")) browserName = "Google Chrome";
+// Detectar navegador usando criterios más específicos
+if (userAgent.includes("Edg")) browserName = "Microsoft Edge";
+else if (userAgent.includes("OPR") || userAgent.includes("Opera")) browserName = "Opera";
+else if (userAgent.includes("Chrome") && !userAgent.includes("Edg")) browserName = "Google Chrome";
 else if (userAgent.includes("Firefox")) browserName = "Mozilla Firefox";
-else if (userAgent.includes("Safari")) browserName = "Safari";
-else if (userAgent.includes("Edge")) browserName = "Microsoft Edge";
-else if (userAgent.includes("Opera")) browserName = "Opera";
+else if (userAgent.includes("Safari") && !userAgent.includes("Chrome")) browserName = "Safari";
 
 // Detectar sistema operativo
 if (userAgent.includes("Windows")) operatingSystem = "Windows";
@@ -44,9 +40,11 @@ else if (userAgent.includes("Linux")) operatingSystem = "Linux";
 else if (userAgent.includes("Android")) operatingSystem = "Android";
 else if (userAgent.includes("like Mac")) operatingSystem = "iOS";
 
-// Mostrar información del navegador y sistema operativo
+// Obtener la zona horaria
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-document.getElementById("device-info").textContent = `
-  Navegador: ${browserName}
-  Sistema Operativo: ${operatingSystem}
+
+// Mostrar información con saltos de línea
+document.getElementById("device-info").innerHTML = `
+  Navegador: ${browserName} <br>
+  Sistema Operativo: ${operatingSystem} <br>
   Zona horaria: ${timeZone}`;
